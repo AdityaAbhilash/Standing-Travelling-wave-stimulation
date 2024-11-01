@@ -18,7 +18,7 @@ const WaveAnimation = ({ v1, v2, frequency, wavelength, beta, z0, showVoltage, t
 
     const drawWave = (timestamp) => {
       if (!startTime) startTime = timestamp;
-      const elapsedTime = (timestamp - startTime) / 50000; // Convert to seconds
+      const elapsedTime = (timestamp - startTime) / 150000; // Convert to seconds
 
       ctx.clearRect(0, 0, width, height);
 
@@ -41,7 +41,7 @@ const WaveAnimation = ({ v1, v2, frequency, wavelength, beta, z0, showVoltage, t
       ctx.lineWidth = 3;
 
       // Calculate the number of wavelengths to show
-      const numWavelengths = Math.max(1, Math.min(10, Math.floor(width / wavelength)));
+      const numWavelengths = Math.max(1, Math.min(10, Math.floor(width / (wavelength * 50))));
       const totalLength = numWavelengths * wavelength;
 
       const drawWaveComponent = (amplitude, direction, color) => {
@@ -55,7 +55,11 @@ const WaveAnimation = ({ v1, v2, frequency, wavelength, beta, z0, showVoltage, t
           } else {
             y = height / 2 - (amplitude / z0) * Math.cos(w0 * elapsedTime - direction * beta * z) * scale;
           }
-          ctx.lineTo(x, y);
+          if (x === 0) {
+            ctx.moveTo(x, y);
+          } else {
+            ctx.lineTo(x, y);
+          }
         }
         ctx.stroke();
       };
