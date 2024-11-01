@@ -1,0 +1,163 @@
+.home-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f0f4f8 0%, #e6eef5 100%);
+  }
+  
+  .home-main-content {
+    flex-grow: 1;
+    padding: 3rem 2rem;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .home-page-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    width: 100%;
+  }
+  
+  .home-title {
+    font-size: 2.5rem;
+    color: #4a90e2;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    position: relative;
+  }
+  
+  .home-title::after {
+    content: none;
+  }
+  
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+  
+  .home-subtitle {
+    font-size: 2rem;
+    color: #4a90e2;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+  
+  .home-formula-section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .home-formula-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+    width: 100%;
+  }
+  
+  .home-formula-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .home-formula-card:hover {
+    transform: translateY(-8px) rotate(2deg);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+  }
+  
+  .home-formula-title {
+    color: #50e3c2;
+    margin-top: 0;
+    font-size: 1.4rem;
+    border-bottom: 2px solid #50e3c2;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .home-formula {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #333;
+    margin-top: 1rem;
+    line-height: 1.8;
+  }
+  
+  .home-symbol-definitions {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    margin-top: 3rem;
+    max-width: 800px;
+    width: 100%;
+  }
+  
+  .home-symbol-title {
+    color: #50e3c2;
+    margin-top: 0;
+    font-size: 1.6rem;
+    text-align: center;
+    border-bottom: 2px solid #50e3c2;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .home-symbol-list {
+    columns: 2;
+    -webkit-columns: 2;
+    -moz-columns: 2;
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .home-symbol-list li {
+    margin-bottom: 0.8rem;
+    break-inside: avoid-column;
+  }
+  
+  @media (max-width: 768px) {
+    .home-formula-grid {
+      grid-template-columns: 1fr;
+    }
+  
+    .home-symbol-list {
+      columns: 1;
+      -webkit-columns: 1;
+      -moz-columns: 1;
+    }
+  
+    .home-title {
+      font-size: 2rem;
+    }
+  
+    .home-subtitle {
+      font-size: 1.8rem;
+    }
+  }
+  
+  @media (min-width: 1200px) {
+    .home-main-content {
+      padding: 4rem 2rem;
+    }
+  
+    .home-formula-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  .home-formula sub {
+    font-size: 0.8em;
+    vertical-align: sub;
+    line-height: 0;
+  }
