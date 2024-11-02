@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 
-const WaveAnimation = ({ v1, v2, frequency, wavelength, beta, z0, showVoltage, time }) => {
+const WaveAnimation = ({ v1, v2, frequency, wavelength, beta, z0, alpha, showVoltage, time }) => {
   const canvasRef = useRef(null);
   const animationRef = useRef(null);
   const [showForward, setShowForward] = useState(true);
@@ -51,9 +51,9 @@ const WaveAnimation = ({ v1, v2, frequency, wavelength, beta, z0, showVoltage, t
           const z = (x / width) * totalLength;
           let y;
           if (showVoltage) {
-            y = height / 2 - amplitude * Math.cos(w0 * elapsedTime - direction * beta * z) * scale;
+            y = height / 2 - amplitude * Math.exp(-alpha * z) * Math.cos(w0 * elapsedTime - direction * beta * z) * scale;
           } else {
-            y = height / 2 - (amplitude / z0) * Math.cos(w0 * elapsedTime - direction * beta * z) * scale;
+            y = height / 2 - (amplitude / z0) * Math.exp(-alpha * z) * Math.cos(w0 * elapsedTime - direction * beta * z) * scale;
           }
           if (x === 0) {
             ctx.moveTo(x, y);
@@ -80,13 +80,13 @@ const WaveAnimation = ({ v1, v2, frequency, wavelength, beta, z0, showVoltage, t
           let y;
           if (showVoltage) {
             y = height / 2 - (
-              v1 * Math.cos(w0 * elapsedTime - beta * z) + 
-              v2 * Math.cos(w0 * elapsedTime + beta * z)
+              v1 * Math.exp(-alpha * z) * Math.cos(w0 * elapsedTime - beta * z) + 
+              v2 * Math.exp(-alpha * z) * Math.cos(w0 * elapsedTime + beta * z)
             ) * scale;
           } else {
             y = height / 2 - (
-              (v1 / z0) * Math.cos(w0 * elapsedTime - beta * z) - 
-              (v2 / z0) * Math.cos(w0 * elapsedTime + beta * z)
+              (v1 / z0) * Math.exp(-alpha * z) * Math.cos(w0 * elapsedTime - beta * z) - 
+              (v2 / z0) * Math.exp(-alpha * z) * Math.cos(w0 * elapsedTime + beta * z)
             ) * scale;
           }
           ctx.lineTo(x, y);
@@ -107,7 +107,7 @@ const WaveAnimation = ({ v1, v2, frequency, wavelength, beta, z0, showVoltage, t
     return () => {
       cancelAnimationFrame(animationRef.current);
     };
-  }, [v1, v2, frequency, wavelength, beta, z0, showVoltage, showForward, showBackward, showResultant]);
+  }, [v1, v2, frequency, wavelength, beta, z0, alpha, showVoltage, showForward, showBackward, showResultant]);
 
   return (
     <div className="wave-animation">

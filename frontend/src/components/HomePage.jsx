@@ -38,9 +38,25 @@ const HomePage = () => {
             </div>
 
             <div className="home-formula-card">
+              <h3 className="home-formula-title">Lossy Transmission Line</h3>
+              <p className="home-formula-subtitle">Voltage Waves:</p>
+              <p className="home-formula">Forward Wave: V<sub>f</sub>(z,t) = V<sub>1</sub>e<sup>-αz</sup> cos(ωt - βz)</p>
+              <p className="home-formula">Backward Wave: V<sub>b</sub>(z,t) = V<sub>2</sub>e<sup>-αz</sup> cos(ωt + βz)</p>
+              <p className="home-formula">Resultant Wave: V(z,t) = V<sub>f</sub>(z,t) + V<sub>b</sub>(z,t)</p>
+              </div> 
+              <div className="home-formula-card">
+              <h3 className="home-formula-title">Lossy Transmission Line</h3>
+              <p className="home-formula-subtitle">Current Waves:</p>
+              <p className="home-formula">Forward Wave: I<sub>f</sub>(z,t) = (V<sub>1</sub>/Z<sub>0</sub>)e<sup>-αz</sup> cos(ωt - βz)</p>
+              <p className="home-formula">Backward Wave: I<sub>b</sub>(z,t) = -(V<sub>2</sub>/Z<sub>0</sub>)e<sup>-αz</sup> cos(ωt + βz)</p>
+              <p className="home-formula">Resultant Wave: I(z,t) = I<sub>f</sub>(z,t) + I<sub>b</sub>(z,t)</p>
+            </div>
+
+            <div className="home-formula-card">
               <h3 className="home-formula-title">Transmission Line Characteristics</h3>
-              <p className="home-formula">Reflection Coefficient: Γ = V<sub>2</sub> / V<sub>1</sub></p>
-              <p className="home-formula">Voltage Standing Wave Ratio (VSWR): VSWR = (1 + |Γ|) / (1 - |Γ|)</p>
+              <p className="home-formula">Voltage Reflection Coefficient: Γ = V<sub>2</sub> / V<sub>1</sub></p>
+              <p className="home-formula">Impedance Reflection Coefficient: Γ = (Z<sub>L</sub> - Z<sub>0</sub>) / (Z<sub>L</sub> + Z<sub>0</sub>)</p>
+              <p className="home-formula">VSWR = (1 + |Γ|) / (1 - |Γ|)</p>
               <p className="home-formula">Characteristic Impedance: Z<sub>0</sub></p>
             </div>
           </div>
@@ -58,6 +74,8 @@ const HomePage = () => {
               <li>λ: Wavelength</li>
               <li>Z<sub>0</sub>: Characteristic impedance of the transmission line</li>
               <li>Γ: Reflection coefficient</li>
+              <li>α: Attenuation constant representing losses in the transmission line</li>
+              <li>Z<sub>L</sub>: Load impedance</li>
             </ul>
           </div>
         </section>

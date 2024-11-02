@@ -15,6 +15,7 @@ const TransmissionLinePage = () => {
   const [showVoltage, setShowVoltage] = useState(true); // Toggle between voltage and current
   const [minVoltage, setMinVoltage] = useState(-5);
   const [maxVoltage, setMaxVoltage] = useState(5);
+  const [alpha, setAlpha] = useState(0); // Default alpha = 0 for lossless line
 
   const [time, setTime] = useState(0);
   const animationRef = useRef();
@@ -76,6 +77,7 @@ const TransmissionLinePage = () => {
                 wavelength={wavelength}
                 beta={beta}
                 z0={z0}
+                alpha={alpha}
                 showVoltage={showVoltage}
                 time={time}
                 minVoltage={minVoltage}
@@ -100,6 +102,8 @@ const TransmissionLinePage = () => {
             maxVoltage={maxVoltage}
             setMinVoltage={setMinVoltage}
             setMaxVoltage={setMaxVoltage}
+            alpha={alpha}
+            setAlpha={setAlpha}
           />
         </div>
       </div>

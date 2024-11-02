@@ -3,7 +3,7 @@ import Swal from 'sweetalert2';
 
 const ControlPanel = ({ 
   v1, setV1, v2, setV2, frequency, setFrequency, wavelength, setWavelength, beta, setBeta,
-  z0, setZ0, minVoltage, maxVoltage
+  z0, setZ0, minVoltage, maxVoltage, alpha, setAlpha
 }) => {
   // Separate reflection coefficients for each mode
   const [directReflectionCoeff, setDirectReflectionCoeff] = useState(0);
@@ -172,6 +172,28 @@ const ControlPanel = ({
                 type="number"
                 value={Number(beta).toFixed(2)}
                 onChange={(e) => handleBetaChange(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="control">
+            <label>Attenuation Constant α (Np/m):</label>
+            <div className="input-group">
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.01"
+                value={alpha}
+                onChange={(e) => setAlpha(Number(e.target.value))}
+              />
+              <input
+                type="number"
+                value={Number(alpha).toFixed(2)}
+                onChange={(e) => setAlpha(Number(e.target.value))}
+                min="0"
+                max="1"
+                step="0.01"
               />
             </div>
           </div>
