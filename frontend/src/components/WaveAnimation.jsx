@@ -33,13 +33,24 @@ const WaveAnimation = ({ v1, frequency, wavelength, beta, z0, alpha, showVoltage
       ctx.strokeStyle = '#ddd';
       ctx.fillStyle = '#333';
       ctx.font = '12px Arial';
-      for (let v = -100; v <= 100; v += 10) { // Adjust the range and step for labels
-        const y = height / 2 - v * scale;
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(width, y);
-        ctx.stroke();
-        ctx.fillText(`${v} V`, 5, y - 5); // Ensure labels are drawn
+      if (showVoltage) { // Check if we should show voltage
+        for (let v = -100; v <= 100; v += 10) { // Adjust the range and step for labels
+          const y = height / 2 - v * scale;
+          ctx.beginPath();
+          ctx.moveTo(0, y);
+          ctx.lineTo(width, y);
+          ctx.stroke();
+          ctx.fillText(`${v} V`, 5, y - 5); // Ensure labels are drawn
+        }
+      } else { // Show current in amperes
+        for (let a = -100; a <= 100; a += 10) { // Adjust the range and step for current labels
+          const y = height / 2 - a * scale; // Adjust scale for current
+          ctx.beginPath();
+          ctx.moveTo(0, y);
+          ctx.lineTo(width, y);
+          ctx.stroke();
+          ctx.fillText(`${a} A`, 5, y - 5); // Ensure labels are drawn
+        }
       }
 
       ctx.lineWidth = 3;
@@ -51,11 +62,11 @@ const WaveAnimation = ({ v1, frequency, wavelength, beta, z0, alpha, showVoltage
       const reflectionCoeff = storedReflectionCoeff; // Use the stored reflection coefficient
       const absReflectionCoeff = math.abs(reflectionCoeff); // Get the absolute value (magnitude)
       const angleReflectionCoeff = math.arg(reflectionCoeff); // Get the angle (in radians)
-      // const arg = math.arg(gamma * maxWidth);
+       const arg = math.arg(z0);
       
       const v2 = absReflectionCoeff * v1 * Math.exp(-2 * alpha * maxWidth);
       
-      
+      if(showVoltage){
       const drawWaveComponent = (amplitude, direction, color) => {
         ctx.beginPath();
         ctx.strokeStyle = color;
@@ -121,7 +132,78 @@ const WaveAnimation = ({ v1, frequency, wavelength, beta, z0, alpha, showVoltage
         ctx.stroke();
       }
 
+    }
 
+
+
+    else{
+      const drawWaveComponent = (amplitude, direction, color) => {
+        ctx.beginPath();
+        ctx.strokeStyle = color;
+        for (let x = 0; x < width; x++) {
+          const z = (x / width) * totalLength; // Calculate z based on x
+          let y;
+          // Divide amplitude by the absolute magnitude of z0
+          y = height / 2 - (amplitude / Math.abs(z0)) * Math.exp(direction === 1 ? -alpha * z : alpha * z) * Math.cos(w0 * elapsedTime - direction * beta * z - arg) * scale;
+          if (x === 0) {
+            ctx.moveTo(x, y);
+          } else {
+            ctx.lineTo(x, y);
+          }
+        }
+        ctx.stroke();
+      }
+
+      if (showForward) {
+        drawWaveComponent(v1, 1, 'rgba(0, 0, 128, 1)'); // Dark blue
+      }
+
+      if (showBackward) {
+        ctx.beginPath();
+        ctx.strokeStyle = 'rgba(128, 0, 0, 1)'; // Dark red for backward wave
+        for (let x = 0; x < width; x++) {
+          const z = (x / width) * totalLength; // Calculate z based on x
+          let y = height / 2 - (
+            (v2 / Math.abs(z0)) * Math.exp(alpha * z)  * Math.cos(w0 * elapsedTime + beta * z + angleReflectionCoeff - beta*maxWidth -arg) // Calculate y for backward wave
+          ) * scale; // Scale the y value
+          if (x === 0) {
+            ctx.moveTo(x, y);
+          } else {
+            ctx.lineTo(x, y);
+          }
+        }
+        ctx.stroke();
+      }
+
+      if (showResultant) {
+        ctx.beginPath();
+        ctx.strokeStyle = 'rgba(75, 0, 130, 1)'; // Indigo for resultant wave
+        for (let x = 0; x < width; x++) {
+          const z = (x / width) * totalLength; // Calculate z based on x
+          
+          // Calculate y for forward wave
+          const forwardY = height - (
+            (v1 / Math.abs(z0)) * Math.exp(-alpha * z) * Math.cos(w0 * elapsedTime - beta * z -arg) // Forward wave calculation
+          ) * scale;
+
+          // Calculate y for backward wave
+          const backwardY = height / 2 - (
+            (v2 / Math.abs(z0)) * Math.exp(alpha * z)  * Math.cos(w0 * elapsedTime + beta * z + angleReflectionCoeff - beta*maxWidth -arg) // Backward wave calculation
+          ) * scale;
+
+          // Calculate resultant y by adding forward and backward waves
+          const resultantY = forwardY - backwardY;
+
+          if (x === 0) {
+            ctx.moveTo(x, resultantY);
+          } else {
+            ctx.lineTo(x, resultantY);
+          }
+        }
+        ctx.stroke();
+      }
+
+    }
 
 
 

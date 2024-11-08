@@ -18,14 +18,14 @@ const HomePage = () => {
           
           <div className="home-formula-grid">
             <div className="home-formula-card">
-              <h3 className="home-formula-title">Wave Components</h3>
+              <h3 className="home-formula-title">Wave Components (α = 0)</h3>
               <p className="home-formula">Forward Wave: V<sub>f</sub>(z,t) = V<sub>1</sub> cos(ωt - βz)</p>
               <p className="home-formula">Backward Wave: V<sub>b</sub>(z,t) = V<sub>2</sub> cos(ωt + βz)</p>
               <p className="home-formula">Resultant Wave: V(z,t) = V<sub>f</sub>(z,t) + V<sub>b</sub>(z,t)</p>
             </div>
 
             <div className="home-formula-card">
-              <h3 className="home-formula-title">Voltage and Current Waves</h3>
+              <h3 className="home-formula-title">Voltage and Current Waves (α = 0)</h3>
               <p className="home-formula">Voltage Wave: V(z,t) = V<sub>1</sub> cos(ωt - βz) + V<sub>2</sub> cos(ωt + βz)</p>
               <p className="home-formula">Current Wave: I(z,t) = (V<sub>1</sub>/Z<sub>0</sub>) cos(ωt - βz) - (V<sub>2</sub>/Z<sub>0</sub>) cos(ωt + βz)</p>
             </div>
@@ -54,7 +54,7 @@ const HomePage = () => {
 
             <div className="home-formula-card">
               <h3 className="home-formula-title">Transmission Line Characteristics</h3>
-              <p className="home-formula">Voltage Reflection Coefficient: Γ = V<sub>2</sub> / V<sub>1</sub></p>
+              <p className="home-formula">Voltage Reflection Coefficient: Γ = (V<sub>2</sub> / V<sub>1</sub>) e<sup> 2γz</sup></p>
               <p className="home-formula">Impedance Reflection Coefficient: Γ = (Z<sub>L</sub> - Z<sub>0</sub>) / (Z<sub>L</sub> + Z<sub>0</sub>)</p>
               <p className="home-formula">VSWR = (1 + |Γ|) / (1 - |Γ|)</p>
               <p className="home-formula">Characteristic Impedance: Z<sub>0</sub></p>
@@ -74,6 +74,7 @@ const HomePage = () => {
               <li>λ: Wavelength</li>
               <li>Z<sub>0</sub>: Characteristic impedance of the transmission line</li>
               <li>Γ: Reflection coefficient</li>
+              <li>γ: Propagation constant</li>
               <li>α: Attenuation constant representing losses in the transmission line</li>
               <li>Z<sub>L</sub>: Load impedance</li>
             </ul>

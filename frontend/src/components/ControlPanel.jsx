@@ -148,7 +148,7 @@ const ControlPanel = ({
           </div>
 
           <div className="control">
-            <label>V1:</label>
+            <label>V1 (V):</label>
             <div className="input-group">
               <input
                 type="range"
