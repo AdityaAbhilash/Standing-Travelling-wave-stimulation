@@ -545,4 +545,32 @@
     border-radius: 4px;
   }
   
+  .control-panel .control input[type="text"] {
+    padding: 0.5rem;
+    border: 1px solid var(--primary-color);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+    width: 100%; /* Make the input take full width */
+  }
+  
+  .control-panel .control input[type="text"]:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 5px var(--accent-color);
+  }
+  
+  .control-panel .control input[type="text"]::placeholder {
+    color: var(--text-color);
+    opacity: 0.7; /* Slightly transparent placeholder */
+  }
+  
+  .v2-text {
+    font-size: 1rem; /* Adjust font size */
+    color: #4a90e2; /* Change text color */
+    font-weight: bold; /* Make text bold */
+    margin-top: 1rem; /* Add some space above */
+    text-align: center; /* Center the text */
+  }
+  
   
