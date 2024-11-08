@@ -41,14 +41,14 @@ const HomePage = () => {
               <h3 className="home-formula-title">Lossy Transmission Line</h3>
               <p className="home-formula-subtitle">Voltage Waves:</p>
               <p className="home-formula">Forward Wave: V<sub>f</sub>(z,t) = V<sub>1</sub>e<sup>-αz</sup> cos(ωt - βz)</p>
-              <p className="home-formula">Backward Wave: V<sub>b</sub>(z,t) = V<sub>2</sub>e<sup>-αz</sup> cos(ωt + βz)</p>
+              <p className="home-formula">Backward Wave: V<sub>b</sub>(z,t) = V<sub>2</sub>e<sup>αz</sup> cos(ωt + βz)</p>
               <p className="home-formula">Resultant Wave: V(z,t) = V<sub>f</sub>(z,t) + V<sub>b</sub>(z,t)</p>
               </div> 
               <div className="home-formula-card">
               <h3 className="home-formula-title">Lossy Transmission Line</h3>
               <p className="home-formula-subtitle">Current Waves:</p>
               <p className="home-formula">Forward Wave: I<sub>f</sub>(z,t) = (V<sub>1</sub>/Z<sub>0</sub>)e<sup>-αz</sup> cos(ωt - βz)</p>
-              <p className="home-formula">Backward Wave: I<sub>b</sub>(z,t) = -(V<sub>2</sub>/Z<sub>0</sub>)e<sup>-αz</sup> cos(ωt + βz)</p>
+              <p className="home-formula">Backward Wave: I<sub>b</sub>(z,t) = -(V<sub>2</sub>/Z<sub>0</sub>)e<sup>αz</sup> cos(ωt + βz)</p>
               <p className="home-formula">Resultant Wave: I(z,t) = I<sub>f</sub>(z,t) + I<sub>b</sub>(z,t)</p>
             </div>
 

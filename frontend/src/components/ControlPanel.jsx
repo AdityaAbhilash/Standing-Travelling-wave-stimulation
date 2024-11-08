@@ -3,7 +3,7 @@ import Swal from 'sweetalert2';
 
 const ControlPanel = ({ 
   v1, setV1, v2, setV2, frequency, setFrequency, wavelength, setWavelength, beta, setBeta,
-  z0, setZ0, minVoltage, maxVoltage, alpha, setAlpha
+  z0, setZ0, minVoltage, maxVoltage, alpha, setAlpha, maxWidth, setStoredReflectionCoeff
 }) => {
   // Separate reflection coefficients for each mode
   const [directReflectionCoeff, setDirectReflectionCoeff] = useState(0);
@@ -13,12 +13,16 @@ const ControlPanel = ({
   const [zL, setZL] = useState(z0);
   const [activeMode, setActiveMode] = useState('reflection');
   const [isUpdating, setIsUpdating] = useState(false);
+  const [storedReflectionCoeff, setStoredReflectionCoeffLocal] = useState(0);
 
-  // Initialize default values
+  // Calculate and update the reflection coefficient whenever v1 or v2 changes
   useEffect(() => {
-    setV1(3);
-    setV2(3);
-  }, []);
+    if (v1 !== 0) {
+      const reflectionCoeff = (v2 / v1)* Math.exp(2 * alpha * maxWidth); // Calculate reflection coefficient
+      setDirectReflectionCoeff(reflectionCoeff);
+      setStoredReflectionCoeff(reflectionCoeff); // Store the reflection coefficient
+    }
+  }, [v1, v2, setStoredReflectionCoeff]);
 
   // Handle impedance mode calculations
   useEffect(() => {
@@ -28,12 +32,11 @@ const ControlPanel = ({
     if (z0 !== 0) {
       const newReflectionCoeff = (zL - z0) / (zL + z0);
       setImpedanceReflectionCoeff(newReflectionCoeff);
-      
+      setStoredReflectionCoeff(newReflectionCoeff);
+      setStoredReflectionCoeffLocal(newReflectionCoeff);
       // Update V2 based on impedance reflection coefficient
-      const newV2 = v1 * newReflectionCoeff;
-      if (Math.abs(newV2) <= Math.abs(v1)) {
-        setV2(newV2);
-      }
+      const newV2 = v1 * newReflectionCoeff * Math.exp(-2 * alpha * maxWidth);
+      setV2(newV2); // Always update v2 based on impedance reflection coefficient
     }
     
     setIsUpdating(false);
@@ -45,22 +48,24 @@ const ControlPanel = ({
     setIsUpdating(true);
     
     if (v1 !== 0) {
-      const newReflectionCoeff = v2 / v1;
-      setVoltageReflectionCoeff(newReflectionCoeff);
+      const adjustedReflectionCoeff = (v2 / v1) * Math.exp(2 * alpha * maxWidth);
+      setVoltageReflectionCoeff(adjustedReflectionCoeff);
+      setStoredReflectionCoeff(adjustedReflectionCoeff);
+      setStoredReflectionCoeffLocal(adjustedReflectionCoeff);
     }
     
     setIsUpdating(false);
-  }, [v1, v2, activeMode]);
+  }, [v1, v2, activeMode, alpha, maxWidth]);
 
   // Handlers for each mode
   const handleDirectReflectionChange = (value) => {
     const newReflectionCoeff = Number(value);
     if (newReflectionCoeff >= -1 && newReflectionCoeff <= 1) {
       setDirectReflectionCoeff(newReflectionCoeff);
-      const newV2 = v1 * newReflectionCoeff;
-      if (Math.abs(newV2) <= Math.abs(v1)) {
-        setV2(newV2);
-      }
+      const newV2 = v1 * newReflectionCoeff * Math.exp(-2 * alpha * maxWidth);
+      setV2(newV2);
+      setStoredReflectionCoeff(newReflectionCoeff);
+      setStoredReflectionCoeffLocal(newReflectionCoeff);
     }
   };
 
@@ -81,12 +86,18 @@ const ControlPanel = ({
   const handleV1Change = (value) => {
     const newV1 = Number(value);
     setV1(newV1);
+    // Update v2 max limit based on new v1
+    const newMaxV2 = newV1 * Math.exp(-2 * alpha * maxWidth);
+    if (Math.abs(v2) > Math.abs(newMaxV2)) {
+        setV2(newMaxV2); // Adjust v2 if it exceeds the new limit
+    }
   };
 
   const handleV2Change = (value) => {
     const newV2 = Number(value);
-    if (Math.abs(newV2) <= Math.abs(v1)) {
-      setV2(newV2);
+    const maxV2 = v1 * Math.exp(-2 * alpha * maxWidth); // Calculate the maximum v2
+    if (newV2 >= -maxV2 && newV2 <= maxV2) {
+        setV2(newV2);
     }
   };
 
@@ -110,6 +121,17 @@ const ControlPanel = ({
       const newWavelength = (2 * Math.PI / newBeta);
       setWavelength(Number(newWavelength.toFixed(2)));
     }
+  };
+
+  const handleAlphaChange = (value) => {
+    const newAlpha = Number(value);
+    setAlpha(newAlpha);
+    
+    // Use the latest directReflectionCoeff to calculate new v2
+    setV2((prevV2) => {
+        const newV2 = (directReflectionCoeff * v1) * Math.exp(-2 * newAlpha * maxWidth);
+        return newV2;
+    });
   };
 
   return (
@@ -185,12 +207,12 @@ const ControlPanel = ({
                 max="1"
                 step="0.01"
                 value={alpha}
-                onChange={(e) => setAlpha(Number(e.target.value))}
+                onChange={(e) => handleAlphaChange(e.target.value)}
               />
               <input
                 type="number"
                 value={Number(alpha).toFixed(2)}
-                onChange={(e) => setAlpha(Number(e.target.value))}
+                onChange={(e) => handleAlphaChange(e.target.value)}
                 min="0"
                 max="1"
                 step="0.01"
@@ -293,7 +315,7 @@ const ControlPanel = ({
                 type="range"
                 min="-5"
                 max="5"
-                step="0.1"
+                step="0.01"
                 value={v1}
                 onChange={(e) => handleV1Change(e.target.value)}
               />
@@ -301,16 +323,24 @@ const ControlPanel = ({
                 type="number"
                 value={v1.toFixed(2)}
                 onChange={(e) => handleV1Change(e.target.value)}
-                step="0.1"
+                step="0.01"
               />
+            </div>
+            <div className="control">
+              <label>Calculated V2 (V):</label>
+              <div>
+                {`V2 = ${v1.toFixed(2)} * e^(-2 * ${alpha.toFixed(2)} * ${maxWidth}) = ${(
+                  v1 * Math.exp(-2 * alpha * maxWidth)
+                ).toFixed(2)}`}
+              </div>
             </div>
             <div className="control">
               <label>V2 (V):</label>
               <input
                 type="range"
-                min={-Math.abs(v1)}
-                max={Math.abs(v1)}
-                step="0.1"
+                min={-Math.abs(v1 * Math.exp(-2 * alpha * maxWidth))}
+                max={Math.abs(v1 * Math.exp(-2 * alpha * maxWidth))}
+                step="0.01"
                 value={v2}
                 onChange={(e) => handleV2Change(e.target.value)}
               />
@@ -318,7 +348,7 @@ const ControlPanel = ({
                 type="number"
                 value={v2.toFixed(2)}
                 onChange={(e) => handleV2Change(e.target.value)}
-                step="0.1"
+                step="0.01"
               />
             </div>
           </div>

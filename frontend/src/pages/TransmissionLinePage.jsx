@@ -8,17 +8,22 @@ import '../styles/TransmissionLine.css';
 const TransmissionLinePage = () => {
   const [v1, setV1] = useState(1);
   const [v2, setV2] = useState(0);
-  const [frequency, setFrequency] = useState(100);
-  const [wavelength, setWavelength] = useState(100);
+  const [frequency, setFrequency] = useState(300);
+  const [wavelength, setWavelength] = useState(5);
   const [beta, setBeta] = useState(2 * Math.PI / 100);
   const [z0, setZ0] = useState(5); // Default characteristic impedance
   const [showVoltage, setShowVoltage] = useState(true); // Toggle between voltage and current
   const [minVoltage, setMinVoltage] = useState(-5);
   const [maxVoltage, setMaxVoltage] = useState(5);
   const [alpha, setAlpha] = useState(0); // Default alpha = 0 for lossless line
+  const [storedReflectionCoeff, setStoredReflectionCoeff] = useState(0); // Store reflection coefficient
 
   const [time, setTime] = useState(0);
   const animationRef = useRef();
+
+  // Calculate maxWidth based on the number of wavelengths
+  const numWavelengths = Math.max(1, Math.min(10, Math.floor(800 / (wavelength * 50)))); // Assuming canvas width is 800
+  const maxWidth = numWavelengths * wavelength; // Maximum width based on number of wavelengths
 
   useEffect(() => {
     const animate = () => {
@@ -82,6 +87,8 @@ const TransmissionLinePage = () => {
                 time={time}
                 minVoltage={minVoltage}
                 maxVoltage={maxVoltage}
+                maxWidth={maxWidth} // Pass maxWidth to WaveAnimation
+                storedReflectionCoeff={storedReflectionCoeff} // Pass stored reflection coefficient
               />
             </div>
           </div>
@@ -104,6 +111,8 @@ const TransmissionLinePage = () => {
             setMaxVoltage={setMaxVoltage}
             alpha={alpha}
             setAlpha={setAlpha}
+            maxWidth={maxWidth} // Pass maxWidth to ControlPanel
+            setStoredReflectionCoeff={setStoredReflectionCoeff} // Pass function to update stored reflection coefficient
           />
         </div>
       </div>

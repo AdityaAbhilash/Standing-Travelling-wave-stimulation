@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 
-const WaveAnimation = ({ v1, v2, frequency, wavelength, beta, z0, alpha, showVoltage, time }) => {
+const WaveAnimation = ({ v1, v2, frequency, wavelength, beta, z0, alpha, showVoltage, time, maxWidth, storedReflectionCoeff }) => {
   const canvasRef = useRef(null);
   const animationRef = useRef(null);
   const [showForward, setShowForward] = useState(true);
@@ -18,7 +18,7 @@ const WaveAnimation = ({ v1, v2, frequency, wavelength, beta, z0, alpha, showVol
 
     const drawWave = (timestamp) => {
       if (!startTime) startTime = timestamp;
-      const elapsedTime = (timestamp - startTime) / 150000; // Convert to seconds
+      const elapsedTime = (timestamp - startTime) / 40000; // Convert to seconds
 
       ctx.clearRect(0, 0, width, height);
 
@@ -48,12 +48,12 @@ const WaveAnimation = ({ v1, v2, frequency, wavelength, beta, z0, alpha, showVol
         ctx.beginPath();
         ctx.strokeStyle = color;
         for (let x = 0; x < width; x++) {
-          const z = (x / width) * totalLength;
+          const z = (x / width) * totalLength; // Calculate z based on x
           let y;
           if (showVoltage) {
-            y = height / 2 - amplitude * Math.exp(-alpha * z) * Math.cos(w0 * elapsedTime - direction * beta * z) * scale;
+            y = height / 2 - amplitude * Math.exp(direction === 1 ? -alpha * z : alpha * z) * Math.cos(w0 * elapsedTime - direction * beta * z) * scale;
           } else {
-            y = height / 2 - (amplitude / z0) * Math.exp(-alpha * z) * Math.cos(w0 * elapsedTime - direction * beta * z) * scale;
+            y = height / 2 - (amplitude / z0) * Math.exp(direction === 1 ? -alpha * z : alpha * z) * Math.cos(w0 * elapsedTime - direction * beta * z) * scale;
           }
           if (x === 0) {
             ctx.moveTo(x, y);
@@ -76,17 +76,17 @@ const WaveAnimation = ({ v1, v2, frequency, wavelength, beta, z0, alpha, showVol
         ctx.beginPath();
         ctx.strokeStyle = 'rgba(75, 0, 130, 1)'; // Indigo
         for (let x = 0; x < width; x++) {
-          const z = (x / width) * totalLength;
+          const z = (x / width) * totalLength; // Calculate z based on x
           let y;
           if (showVoltage) {
             y = height / 2 - (
               v1 * Math.exp(-alpha * z) * Math.cos(w0 * elapsedTime - beta * z) + 
-              v2 * Math.exp(-alpha * z) * Math.cos(w0 * elapsedTime + beta * z)
+              v2 * Math.exp(alpha * z) * Math.cos(w0 * elapsedTime + beta * z)
             ) * scale;
           } else {
             y = height / 2 - (
               (v1 / z0) * Math.exp(-alpha * z) * Math.cos(w0 * elapsedTime - beta * z) - 
-              (v2 / z0) * Math.exp(-alpha * z) * Math.cos(w0 * elapsedTime + beta * z)
+              (v2 / z0) * Math.exp(alpha * z) * Math.cos(w0 * elapsedTime + beta * z)
             ) * scale;
           }
           ctx.lineTo(x, y);
@@ -94,8 +94,8 @@ const WaveAnimation = ({ v1, v2, frequency, wavelength, beta, z0, alpha, showVol
         ctx.stroke();
       }
 
-      // Calculate VSWR and reflection coefficient
-      const reflectionCoeff = (v2 / v1);
+      // Calculate VSWR and reflection coefficient using the stored reflection coefficient
+      const reflectionCoeff = storedReflectionCoeff; // Use the stored reflection coefficient
       const vswr = (1 + Math.abs(reflectionCoeff)) / (1 - Math.abs(reflectionCoeff));
       setMetrics({ reflectionCoeff, vswr });
 
@@ -107,14 +107,14 @@ const WaveAnimation = ({ v1, v2, frequency, wavelength, beta, z0, alpha, showVol
     return () => {
       cancelAnimationFrame(animationRef.current);
     };
-  }, [v1, v2, frequency, wavelength, beta, z0, alpha, showVoltage, showForward, showBackward, showResultant]);
+  }, [v1, v2, frequency, wavelength, beta, z0, alpha, showVoltage, showForward, showBackward, showResultant, maxWidth, storedReflectionCoeff]);
 
   return (
     <div className="wave-animation">
       <canvas ref={canvasRef} width={800} height={400} />
       <div className="wave-metrics">
         <p>Reflection Coefficient: {metrics.reflectionCoeff.toFixed(2)}</p>
-        <p>VSWR: {metrics.vswr.toFixed(2)}</p>
+        {/* <p>VSWR: {metrics.vswr.toFixed(2)}</p> */}
       </div>
       <div className="wave-toggles">
         <label className="wave-toggle">
