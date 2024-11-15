@@ -5,10 +5,9 @@ const math = create(all);
 
 const ControlPanel = ({ 
   v1, setV1, frequency, setFrequency, wavelength, setWavelength, beta, setBeta,
-  z0, setZ0, minVoltage, maxVoltage, alpha, setAlpha, maxWidth, setStoredReflectionCoeff
+  z0, setZ0, minVoltage, maxVoltage, alpha, setAlpha, maxWidth, setStoredReflectionCoeff,
+  realZ0, setRealZ0, imaginaryZ0, setImaginaryZ0
 }) => {
-  const [realZ0, setRealZ0] = useState(0);
-  const [imaginaryZ0, setImaginaryZ0] = useState(0);
   const [realZL, setRealZL] = useState(0);
   const [imaginaryZL, setImaginaryZL] = useState(0);
   const zL = useRef(math.complex(5, 0)); // Default value for ZL

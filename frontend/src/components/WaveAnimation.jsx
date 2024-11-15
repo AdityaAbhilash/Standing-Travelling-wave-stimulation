@@ -3,7 +3,7 @@ import { create, all } from 'mathjs';
 
 const math = create(all);
 
-const WaveAnimation = ({ v1, frequency, wavelength, beta, z0, alpha, showVoltage, time, maxWidth, storedReflectionCoeff }) => {
+const WaveAnimation = ({ v1, frequency, wavelength, beta, z0,realZ0,imaginaryZ0,alpha, showVoltage, time, maxWidth, storedReflectionCoeff }) => {
   const canvasRef = useRef(null);
   const animationRef = useRef(null);
   const [showForward, setShowForward] = useState(true);
@@ -62,7 +62,10 @@ const WaveAnimation = ({ v1, frequency, wavelength, beta, z0, alpha, showVoltage
       const reflectionCoeff = storedReflectionCoeff; // Use the stored reflection coefficient
       const absReflectionCoeff = math.abs(reflectionCoeff); // Get the absolute value (magnitude)
       const angleReflectionCoeff = math.arg(reflectionCoeff); // Get the angle (in radians)
-       const arg = math.arg(z0);
+      const z1 = math.complex(realZ0, imaginaryZ0);
+      // const magi = Math.sqrt(realZ0*realZ0 + imaginaryZ0*imaginaryZ0);
+      const arg = math.arg(z1);
+      const magi = math.abs(z1);
       
       const v2 = absReflectionCoeff * v1 * Math.exp(-2 * alpha * maxWidth);
       
@@ -112,12 +115,12 @@ const WaveAnimation = ({ v1, frequency, wavelength, beta, z0, alpha, showVoltage
           
           // Calculate y for forward wave
           const forwardY = (
-            v1 * Math.exp(-alpha * z) * Math.cos(w0 * elapsedTime - beta * z) // Forward wave calculation
+            -v1 * Math.exp(-alpha * z) * Math.cos(w0 * elapsedTime - beta * z) // Forward wave calculation
           ) * scale;
 
           // Calculate y for backward wave
           const backwardY = height / 2 - (
-            v2 * Math.exp(alpha * z)  * Math.cos(w0 * elapsedTime + beta * z + angleReflectionCoeff - beta*maxWidth) // Backward wave calculation
+            -v2 * Math.exp(alpha * z)  * Math.cos(w0 * elapsedTime + beta * z + angleReflectionCoeff - beta*maxWidth) // Backward wave calculation
           ) * scale;
 
           // Calculate resultant y by adding forward and backward waves
@@ -144,7 +147,7 @@ const WaveAnimation = ({ v1, frequency, wavelength, beta, z0, alpha, showVoltage
           const z = (x / width) * totalLength; // Calculate z based on x
           let y;
           // Divide amplitude by the absolute magnitude of z0
-          y = height / 2 - (amplitude / Math.abs(z0)) * Math.exp(direction === 1 ? -alpha * z : alpha * z) * Math.cos(w0 * elapsedTime - direction * beta * z - arg) * scale;
+          y = height / 2 - (amplitude/magi) * Math.exp(direction === 1 ? -alpha * z : alpha * z) * Math.cos(w0 * elapsedTime - direction * beta * z - arg) * scale;
           if (x === 0) {
             ctx.moveTo(x, y);
           } else {
@@ -164,7 +167,7 @@ const WaveAnimation = ({ v1, frequency, wavelength, beta, z0, alpha, showVoltage
         for (let x = 0; x < width; x++) {
           const z = (x / width) * totalLength; // Calculate z based on x
           let y = height / 2 - (
-            (v2 / Math.abs(z0)) * Math.exp(alpha * z)  * Math.cos(w0 * elapsedTime + beta * z + angleReflectionCoeff - beta*maxWidth -arg) // Calculate y for backward wave
+            (v2/magi) * Math.exp(alpha * z)  * Math.cos(w0 * elapsedTime + beta * z + angleReflectionCoeff - beta*maxWidth -arg) // Calculate y for backward wave
           ) * scale; // Scale the y value
           if (x === 0) {
             ctx.moveTo(x, y);
@@ -183,12 +186,12 @@ const WaveAnimation = ({ v1, frequency, wavelength, beta, z0, alpha, showVoltage
           
           // Calculate y for forward wave
           const forwardY = height - (
-            (v1 / Math.abs(z0)) * Math.exp(-alpha * z) * Math.cos(w0 * elapsedTime - beta * z -arg) // Forward wave calculation
+            (v1/magi) * Math.exp(-alpha * z) * Math.cos(w0 * elapsedTime - beta * z -arg) // Forward wave calculation
           ) * scale;
 
           // Calculate y for backward wave
           const backwardY = height / 2 - (
-            (v2 / Math.abs(z0)) * Math.exp(alpha * z)  * Math.cos(w0 * elapsedTime + beta * z + angleReflectionCoeff - beta*maxWidth -arg) // Backward wave calculation
+            (v2/magi) * Math.exp(alpha * z)  * Math.cos(w0 * elapsedTime + beta * z + angleReflectionCoeff - beta*maxWidth -arg) // Backward wave calculation
           ) * scale;
 
           // Calculate resultant y by adding forward and backward waves

@@ -6,9 +6,8 @@ import Footer from '../components/Footer';
 import '../styles/TransmissionLine.css';
 
 const TransmissionLinePage = () => {
-  const [v1, setV1] = useState(1);
-  // const [v2, setV2] = useState(0);
-  const [frequency, setFrequency] = useState(300);
+  const [v1, setV1] = useState(20);
+  const [frequency, setFrequency] = useState(50);
   const [wavelength, setWavelength] = useState(5);
   const [beta, setBeta] = useState(2 * Math.PI / 100);
   const [z0, setZ0] = useState(5);
@@ -19,6 +18,9 @@ const TransmissionLinePage = () => {
   const [storedReflectionCoeff, setStoredReflectionCoeff] = useState(0);
   const [time, setTime] = useState(0);
   const animationRef = useRef();
+
+  const [realZ0, setRealZ0] = useState(5);
+  const [imaginaryZ0, setImaginaryZ0] = useState(0);
 
   const numWavelengths = Math.max(1, Math.min(10, Math.floor(800 / (wavelength * 50))));
   const maxWidth = numWavelengths * wavelength;
@@ -39,11 +41,6 @@ const TransmissionLinePage = () => {
   useEffect(() => {
     setBeta(2 * Math.PI / wavelength);
   }, [wavelength]);
-
-  // useEffect(() => {
-  //   const newV2 = v1 * Math.exp(-2 * alpha * maxWidth);
-  //   setV2(newV2);
-  // }, [v1, alpha, maxWidth]);
 
   const handleWavelengthChange = (newWavelength) => {
     setWavelength(newWavelength);
@@ -80,7 +77,6 @@ const TransmissionLinePage = () => {
             <div className="wave-container">
               <WaveAnimation
                 v1={v1}
-                // v2={v2}
                 frequency={frequency}
                 wavelength={wavelength}
                 beta={beta}
@@ -92,6 +88,8 @@ const TransmissionLinePage = () => {
                 maxVoltage={maxVoltage}
                 maxWidth={maxWidth}
                 storedReflectionCoeff={storedReflectionCoeff}
+                realZ0={realZ0}
+                imaginaryZ0={imaginaryZ0}
               />
             </div>
           </div>
@@ -114,7 +112,10 @@ const TransmissionLinePage = () => {
             setAlpha={setAlpha}
             maxWidth={maxWidth}
             setStoredReflectionCoeff={setStoredReflectionCoeff}
-            // v2={v2}
+            realZ0={realZ0}
+            setRealZ0={setRealZ0}
+            imaginaryZ0={imaginaryZ0}
+            setImaginaryZ0={setImaginaryZ0}
           />
         </div>
       </div>
