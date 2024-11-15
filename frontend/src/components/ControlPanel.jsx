@@ -29,6 +29,12 @@ const ControlPanel = ({
     }
   }, [realZL, imaginaryZL, z0]);
 
+  useEffect(() => {
+    if (alpha === 0) {
+      setImaginaryZ0(0); // Reset imaginaryZ0 to 0 if alpha is set to 0
+    }
+  }, [alpha]); // This effect runs whenever alpha changes
+
   const calculateReflectionCoefficient = (z0, zL) => {
     const reflectionCoeff = math.divide(math.subtract(zL, z0), math.add(zL, z0));
     setStoredReflectionCoeff(reflectionCoeff);
@@ -51,6 +57,10 @@ const ControlPanel = ({
     setBeta(newBeta);
     const newWavelength = (2 * Math.PI) / newBeta; // Calculate new wavelength based on beta
     setWavelength(newWavelength); // Update wavelength
+  };
+
+  const handleImaginaryZ0Change = (value) => {
+    setImaginaryZ0(Number(value)); // Update state for imaginaryZ0
   };
 
   // Calculate v2 based on the reflection coefficient and v1
@@ -179,8 +189,9 @@ const ControlPanel = ({
               <input
                 type="number"
                 value={imaginaryZ0}
-                onChange={(e) => setImaginaryZ0(Number(e.target.value))}
+                onChange={(e) => handleImaginaryZ0Change(e.target.value)} // Use the new handler
                 placeholder="Imaginary part"
+                disabled={alpha === 0} // Disable input if alpha is 0
               />
             </div>
           </div>
