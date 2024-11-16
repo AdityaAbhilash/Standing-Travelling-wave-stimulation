@@ -11,7 +11,7 @@ const HomePage = () => {
       <Navbar />
       <div className="home-main-content">
         <header className="home-page-header">
-          <h1 className="home-title">Transmission Line Wave Simulation</h1>
+          <h1 className="home-title">TRAVELLING AND STANDING WAVES ON TRANSMISSION LINES</h1>
         </header>
         <section className="home-formula-section">
           <h2 className="home-subtitle">Key Formulas and Concepts</h2>
