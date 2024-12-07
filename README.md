@@ -11,7 +11,7 @@ This project is a **Wave Simulator** built with **React** and **Vite**. It provi
 
 ## Deployment
 
-The application is deployed on Vercel. You can access it [here](YOUR_VERCEL_LINK).
+The application is deployed on Vercel. You can access it [here](https://standing-travelling-wave-stimulation.vercel.app/).
 
 ## Getting Started
 
@@ -37,7 +37,7 @@ To run the project locally, follow these steps:
    npm run dev
    ```
 
-5. Open your browser and go to `https://standing-travelling-wave-stimulation.vercel.app/`.
+5. Open your browser and go to `http://localhost:3000`.
 
 ## Contributing
 
