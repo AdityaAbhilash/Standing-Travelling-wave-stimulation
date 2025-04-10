@@ -10,11 +10,11 @@ const router = createBrowserRouter([
       children: [
         {
           path: "/",
-          element: <HomePage />,
+          element:<TransmissionLinePage />,
         },
         {
-          path: "/transmission-line",
-          element: <TransmissionLinePage />,
+          path: "/home",
+          element:<HomePage />,
         },
       ],
     },

@@ -7,8 +7,8 @@ const Navbar = () => {
     <nav className="navbar">
       <div className="navbar-logo">Wave Simulator</div>
       <ul className="navbar-links">
-        <li><Link to="/">Home</Link></li>
-        <li><Link to="/transmission-line">Simulation</Link></li>
+        <li><Link to="/home">Home</Link></li>
+        <li><Link to="/">Simulation</Link></li>
       </ul>
     </nav>
   );
